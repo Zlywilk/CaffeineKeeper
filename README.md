@@ -63,6 +63,10 @@ http://localhost:3000
 7. Update the remaining quantity as needed.
 8. Manage and update the details of each coffee by clicking on the "Update" button next to the coffee entry.
 
+Demo
+
+Check out the live demo of CaffeineKeeper [here](https://caffeinekeeper.onrender.com/).
+
 ## TODO
 
 - Implement Niimbot thermal printer integration for printing coffee details and QR codes.
