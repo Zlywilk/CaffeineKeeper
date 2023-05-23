@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CaffeineKeeper - Update Coffee</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+  <div class="container">
+    <h1>Update Coffee</h1>
+    <div id="error-container"></div>
+    <form action="/coffee/update/<%= coffee._id %>" id="add-coffee-form" method="post">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value="<%= coffee.name %>" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="roastDate">Roast Date:</label>
+        <input type="date" id="roastDate" name="roastDate" value="<%= new Date(coffee.roastDate).toISOString().slice(0,10) %>" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="storageDate">Storage Date:</label>
+        <input type="date" id="storageDate" name="storageDate" value="<%= new Date(coffee.storageDate).toISOString().slice(0,10) %>" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="roasteryLink">Roastery Link:</label>
+        <input type="url" class="form-control" id="roasteryLink" value="<%= coffee.roasteryLink %>" name="roasteryLink" required>
+      </div>
+      <div class="form-group">
+        <label for="tastingNotes">Tasting Notes:</label><br>
+        <input type="text" id="tastingNotes" name="tastingNotes" value="<%= coffee.tastingNotes.map(note => note.name).join(', ') %>" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="roastLevel">Roast Level:</label>
+        <select class="form-control" id="roastLevel" name="roastLevel" required>
+            <option value="">--Select--</option>
+            <option value="light" <%= coffee.roastLevel == 'light' ? 'selected' : '' %>>Light</option>
+            <option value="medium" <%= coffee.roastLevel == 'medium' ? 'selected' : '' %>>Medium</option>
+            <option value="dark" <%= coffee.roastLevel == 'dark' ? 'selected' : '' %>>Dark</option>
+          </select>
+          <div class="form-group">
+            <label for="roastType">Roast Type</label>
+            <select class="form-control" id="roastType" name="roastType">
+              <option value="">Select Roast Type</option>
+              <option value="espresso" <%= coffee.roastType === 'espresso' ? 'selected' : '' %>>Espresso Roast</option>
+              <option value="omni" <%= coffee.roastType === 'omni' ? 'selected' : '' %>>Omni Roast</option>
+              <option value="filter" <%= coffee.roastType === 'filter' ? 'selected' : '' %>>Filter Roast</option>
+              <option value="french" <%= coffee.roastType === 'french' ? 'selected' : '' %>>French Roast</option>
+              <option value="light" <%= coffee.roastType === 'light' ? 'selected' : '' %>>Light Roast</option>
+              <option value="medium" <%= coffee.roastType === 'medium' ? 'selected' : '' %>>Medium Roast</option>
+            </select>
+          </div>
+          
+      </div>
+
+      <div id="portions-container">
+        <% coffee.portions.forEach((portion, index) => { %>
+          <div class="form-group">
+            <div class="input-group mb-3">
+            <input type="number" name="portions[<%= index %>][weight]" value="<%= portion.weight %>" placeholder="Weight" class="form-control">
+            <div class="input-group-append">
+              <span class="input-group-text">g</span>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            <input type="number" name="portions[<%= index %>][packets]" value="<%= portion.packets %>" placeholder="Packets" class="form-control">
+            <div class="input-group-append">
+              <span class="input-group-text">Bags</span>
+            </div>
+          </div>
+          </div>
+        <% }); %>
+      </div>
+      <button type="button" onclick="addPortion()" class="btn btn-primary">Add Portion</button>
+
+      <input type="submit" value="Update" class="btn btn-success">
+    </form>
+  </div>
+  <script src="/update.js"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= coffee.name %></title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+  <div class="container">
+    <h1><%= coffee.name %></h1>
+    <a href="/coffee/update/<%= coffee._id %>" class="btn btn-primary">Update Entity</a>
+
+    <p>Roast Date: <%= new Date(coffee.roastDate).toLocaleDateString() %></p>
+    <p>Storage Date: <%= new Date(coffee.storageDate).toLocaleDateString() %></p>
+    <p>Roastery Link: <a href="<%= coffee.roasteryLink %>"><%= coffee.roasteryLink %></a></p>
+    <p>Tasting Notes: <%= coffee.tastingNotes.map(tag => tag.name).join(', ') %></p>
+    <p>Roast Level: <%= coffee.roastLevel %></p>
+    <p>Roast Type: <%= coffee.roastType %></p>
+
+    <form method="POST" action="/coffee/update/<%= coffee._id %>">
+      <% coffee.portions.forEach((portion, index) => { %>
+        <div class="portion-item">
+          <div class="input-group mb-3">
+            <input type="number" name="portions[<%= index %>][weight]" class="form-control" value="<%= portion.weight %>">
+            <div class="input-group-append">
+              <span class="input-group-text">g</span>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            <input type="number" name="portions[<%= index %>][packets]" class="form-control" value="<%= portion.packets %>">
+            <div class="input-group-append">
+              <span class="input-group-text">Bags</span>
+            </div>
+          </div>
+          <input type="hidden" name="portions[<%= index %>][_id]" value="<%= portion._id %>">
+        </div>
+      <% }) %>
+      <div id="new-portions"></div>
+      <button type="button" id="add-portion-button">Add portion</button>
+      <button type="submit">Update</button>
+    </form>
+
+    <img src="/qr/<%= coffee._id %>" alt="QR Code">
+
+    <script>
+      var portionIndex = <%= coffee.portions.length %>;
+
+      document.getElementById('add-portion-button').addEventListener('click', function() {
+        var newPortionDiv = document.createElement('div');
+        newPortionDiv.className = 'portion-item';
+        newPortionDiv.innerHTML = `
+          <div class="input-group mb-3">
+            <input type="number" name="portions[${portionIndex}][weight]" class="form-control" value="">
+            <div class="input-group-append">
+              <span class="input-group-text">g</span>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            <input type="number" name="portions[${portionIndex}][packets]" class="form-control" value="">
+            <div class="input-group-append">
+              <span class="input-group-text">Bags</span>
+            </div>
+          </div>
+        `;
+        document.getElementById('new-portions').appendChild(newPortionDiv);
+        portionIndex++;
+      });
+    </script>
+  </div>
+</body>
+</html>
